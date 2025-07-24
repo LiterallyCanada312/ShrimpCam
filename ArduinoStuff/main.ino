@@ -6,7 +6,7 @@
 Servo s1; 
 Servo s2; 
 
-enum state_enum{SEARCH, LEFT, RIGHT, CENTER};
+enum state_enum{SEARCH, LEFT, RIGHT, CENTER, UP, DOWN};
 int state = SEARCH;
 
 void setup() {
@@ -18,7 +18,10 @@ void setup() {
   Serial.begin(9600);
 }
 
-int currPos = 1500; 
+int currPosX = 1500; 
+int currPosY = 1500;
+
+//TODO: Figure out constraints
 
 int angleConstrain(int currentAngle){
   if(currentAngle > 2000){
@@ -44,23 +47,40 @@ void loop() {
       state = RIGHT;
     }else if(input.equals("CENTER")){
       state = CENTER;
+    }else if(input.equals("UP")){
+      state = UP;
+    }else if(input.equals("DOWN")){
+      state = DOWN;
     }
+
+
     switch(state){
       case LEFT:
-        currPos -= 50;
-        s1.writeMicroseconds(angleConstrain(currPos));
+        currPosX -= 50;
+        s1.writeMicroseconds(angleConstrain(currPosX));
         Serial.println("AIMING LEFT");
-        Serial.println(currPos);
+        Serial.println("X: " + currPosX + "\nY: " + currPosY);
         break;
       case RIGHT:
-        currPos += 50;
-        s1.writeMicroseconds(angleConstrain(currPos));
+        currPosX += 50;
+        s1.writeMicroseconds(angleConstrain(currPosX));
         Serial.println("AIMING RIGHT");
-        Serial.println(currPos);
+        Serial.println("X: " + currPosX + "\nY: " + currPosY);
         break;
+      case UP:
+         currPosY += 50;
+         s2.writeMicroseconds(angleConstrain(currPosY));
+         Serial.println("AIMING UP");
+         Serial.println("X: " + currPosX + "\nY: " + currPosY);
+         break;
+      case DOWN: 
+        currPosY -= 50;  
+        s2.writeMicroseconds(angleConstrain(currPosY));
+        Serial.println("AIMING DOWN");
+        Serial.println("X: " + currPosX + "\nY: " + currPosY);
       case CENTER:
         Serial.println("TARGET CENTERED");
-        Serial.println(currPos);
+        Serial.println("X: " + currPosX + "\nY: " + currPosY);
         break;
       default: 
         break;
